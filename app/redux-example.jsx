@@ -11,9 +11,29 @@ console.log('Start REDUX');
 // ES6 Option: Default state if doesn't exist
 // equal: 	state = state || { name: 'Anonymous' };
 var reducer = (state = { name: 'Anonymous' }, action) => {
-	return state;
+	console.log('New Action', action);
+	switch (action.type) {
+		case 'CHANGE_NAME':
+			return {
+				...state,
+				name: action.name
+			};
+		default:
+			return state;
+	}
 };
 var store = redux.createStore(reducer);
 
 var currentState = store.getState();
 console.log('currentState', currentState);
+
+// State updates happen via Actions
+var action = {
+	// All actions require 'type' attr
+	type: 'CHANGE_NAME',
+	name: 'Bryan'
+};
+
+// Action dispatched to store
+store.dispatch(action);
+console.log('Hi Bryan', store.getState());
