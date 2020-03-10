@@ -19,16 +19,30 @@ var reducer = (state = stateDefault, action) => {
 			return state;
 	}
 };
-var store = redux.createStore(reducer);
+var store = redux.createStore(
+	reducer,
+	redux.compose(window.devToolsExtension ? window.devToolsExtension() : f => f)
+);
 
-var action = {
-	type: 'CHANGE_TEXT',
-	searchText: 'searched Text'
-};
+var unsubscribe = store.subscribe(() => {
+	var state = store.getState();
+
+	console.log('Search Text:', state.searchText);
+	document.getElementById('app').innerHTML = state.searchText;
+});
 
 console.log('currentState', currentState);
 
-store.dispatch(action);
+store.dispatch({
+	type: 'CHANGE_TEXT',
+	searchText: 'searched Text'
+});
+
+store.dispatch({
+	type: 'CHANGE_TEXT',
+	searchText: 'Round 2'
+});
+
 var currentState = store.getState();
 
 console.log('currentState', currentState);

@@ -9,7 +9,7 @@ $(document).foundation();
 require('style!css!sass!applicationStyles');
 
 // JSX Code --> JS XML
-ReactDOM.render(<p>Boilerplate v3</p>, document.getElementById('app'));
+// ReactDOM.render(<p>Boilerplate v3</p>, document.getElementById('app'));
 
 // require('./redux-example.jsx');
 require('./redux-todo-example.jsx');
