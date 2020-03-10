@@ -10,13 +10,45 @@ console.log('Start REDUX');
 
 // ES6 Option: Default state if doesn't exist
 // equal: 	state = state || { name: 'Anonymous' };
-var reducer = (state = { name: 'Anonymous' }, action) => {
+var stateDefault = {
+	name: 'Anonymous',
+	hobbies: [],
+	movies: []
+};
+
+var nextHobbyId = 1;
+var nextMovieId = 1;
+
+var reducer = (state = stateDefault, action) => {
 	console.log('New Action', action);
 	switch (action.type) {
 		case 'CHANGE_NAME':
 			return {
 				...state,
 				name: action.name
+			};
+		case 'ADD_HOBBY':
+			return {
+				...state,
+				hobbies: [
+					...state.hobbies,
+					{
+						id: nextHobbyId++,
+						hobby: action.hobby
+					}
+				]
+			};
+		case 'ADD_MOVIE':
+			return {
+				...state,
+				movies: [
+					...state.movies,
+					{
+						id: nextMovieId++,
+						title: action.title,
+						genre: action.genre
+					}
+				]
 			};
 		default:
 			return state;
@@ -35,23 +67,37 @@ var unsubscribe = store.subscribe(() => {
 
 	console.log('Name is', state.name);
 	document.getElementById('app').innerHTML = state.name;
+
+	console.log('currentState', store.getState());
 });
 // unsubscribe();
 
-var currentState = store.getState();
-console.log('currentState', currentState);
-
 // State updates happen via Actions
-var action = {
+// Action dispatched to store
+store.dispatch({
 	// All actions require 'type' attr
 	type: 'CHANGE_NAME',
 	name: 'Bryan'
-};
+});
 
-// Action dispatched to store
-store.dispatch(action);
+store.dispatch({
+	type: 'ADD_HOBBY',
+	hobby: 'Running'
+});
 
 store.dispatch({
 	type: 'CHANGE_NAME',
 	name: 'Emily'
+});
+
+store.dispatch({
+	type: 'ADD_MOVIE',
+	title: 'Two Heroes',
+	genre: 'Action'
+});
+
+store.dispatch({
+	type: 'ADD_MOVIE',
+	title: 'Avengers',
+	genre: 'Adventure'
 });
