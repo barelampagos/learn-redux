@@ -19,7 +19,7 @@ var stateDefault = {
 var nextHobbyId = 1;
 var nextMovieId = 1;
 
-var reducer = (state = stateDefault, action) => {
+var oldReducer = (state = stateDefault, action) => {
 	console.log('New Action', action);
 	switch (action.type) {
 		case 'CHANGE_NAME':
@@ -64,6 +64,64 @@ var reducer = (state = stateDefault, action) => {
 			return state;
 	}
 };
+//--------------------------------------------------------------
+
+// Custom Reducers
+// state - type of field declared in combineReducers()
+// state - String, default Anonymous
+var nameReducer = (state = 'Anonymous', action) => {
+	switch (action.type) {
+		case 'CHANGE_NAME':
+			return action.name;
+		default:
+			return state;
+	}
+};
+
+// state - array
+var hobbiesReducer = (state = [], action) => {
+	switch (action.type) {
+		case 'ADD_HOBBY':
+			return [
+				...state,
+				{
+					id: nextHobbyId++,
+					hobby: action.hobby
+				}
+			];
+		case 'REMOVE_HOBBY':
+			return state.filter(hobby => hobby.id !== action.id);
+		default:
+			return state;
+	}
+};
+
+var moviesReducer = (state = [], action) => {
+	switch (action.type) {
+		case 'ADD_MOVIE':
+			return [
+				...state,
+				{
+					id: nextMovieId++,
+					title: action.title,
+					genre: action.genre
+				}
+			];
+		case 'REMOVE_MOVIE':
+			return state.filter(movie => movie.id !== action.id);
+		default:
+			return state;
+	}
+};
+
+// Declare which field of the state will be managed by which reducer
+var reducer = redux.combineReducers({
+	// name state will be managed by nameReducer
+	name: nameReducer,
+	hobbies: hobbiesReducer,
+	movies: moviesReducer
+});
+
 var store = redux.createStore(
 	reducer,
 	// Weird syntax to enable redux chrome dev tools
